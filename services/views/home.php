@@ -7,9 +7,14 @@ require_once(__ROOT__.'/controllers/DateController.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World in PHP</title>
+    <title>Indomaret Remote</title>
+    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
 </head>
 <body>
-    <h1> <?php echo hello_world(); ?></h1>
+    <?php require_once(__ROOT__.'/views/sidebar.php');?>
+    <div class="content">
+        <h1>Welcome to My Website</h1>
+        <p>This is a simple page with a sidebar navigation menu.</p>
+    </div>
 </body>
 </html>
