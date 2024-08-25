@@ -53,6 +53,15 @@ body {
     gap: 15px;
 }
 
+.server-date-container {
+    margin-top: auto;
+}
+
+.status-container {
+    margin-top: auto;
+    padding-bottom: 0.65rem;
+}
+
 h1 {
     color: #333;
     font-family: 'Arial', sans-serif;
@@ -148,4 +157,51 @@ h1 {
 
 .upload-button:hover {
     background-color: #218838;
+}
+
+.check-app {
+    margin-top: 3rem;
+}
+
+/* Button */
+.button-container {
+    margin-top: auto;
+}
+
+.custom-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-button-open {
+    padding: 10px 20px;
+    background-color: #2AAA8A;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}
+
+.custom-button:active {
+    background-color: #004085;
+}
+
+.custom-button-open:hover {
+    background-color: #478778;
+}
+
+.custom-button-open:active {
+    background-color: #478778;
 }

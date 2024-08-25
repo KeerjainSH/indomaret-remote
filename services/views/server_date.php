@@ -17,15 +17,30 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         <h1>Welcome to Indomaret Remote</h1>
         <div class="date">
             <div>
+                <h2>Modify Server Date</h2>
                 <label for="date-picker">Select Date:</label>
                 <input type="text" id="date-picker" placeholder="Select Date">
             </div>
-            <div>
+            <div class="server-date-container">
                 <label for="current-server-date">Current Server Date:</label>
                 <input disabled type="text" id="server-date" placeholder="Fetching Current Date ...">
             </div>
         </div>
-        <p>This is a simple page with a sidebar navigation menu.</p>
+        <div class="date check-app">
+            <div>
+                <h2>Check Application Status</h2>
+                <label for="date-picker">Enter App Name:</label>
+                <input type="text" id="app-name" placeholder="Enter App Name to check">
+            </div>
+            <div class="button-container">
+                <button class="custom-button">Check</button>
+            </div>
+            <div class="button-container">
+                <button class="custom-button-open">Open App</button>
+            </div>
+            <div class="status-container"><span>App Not Open</span></div>
+        </div>
+        <!-- <p>This is a simple page with a sidebar navigation menu.</p> -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -40,7 +55,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         function updateServerDate(date) {
             let dateParts = date.split("-");
             let newDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
-
+            document.getElementById("server-date").value = "Fetching Current Date ...";
             $.ajax({
                 url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>DateController.php',
                 method: 'POST',
@@ -51,6 +66,9 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 },
                 error: function(xhr, status, error) {
                     console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    document.getElementById("date-picker").disabled = false;
                 }
             });
         }
