@@ -1,6 +1,6 @@
 <?php
 
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 use phpseclib3\Net\SSH2;
 use phpseclib3\Crypt\PublicKeyLoader;
