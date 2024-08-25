@@ -1,7 +1,5 @@
 <?php
 define('__ROOT__', dirname(dirname(__FILE__)));
-require_once(__ROOT__.'/controllers/DateController.php');
-require_once(__ROOT__.'/scripts/ssh_helper.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +9,7 @@ require_once(__ROOT__.'/scripts/ssh_helper.php');
     <title>Indomaret Remote</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <?php require_once(__ROOT__.'/views/sidebar.php');?>
@@ -23,7 +22,7 @@ require_once(__ROOT__.'/scripts/ssh_helper.php');
             </div>
             <div>
                 <label for="current-server-date">Current Server Date:</label>
-                <input disabled type="text" id="server-date" placeholder="23/08/2024">
+                <input disabled type="text" id="server-date" placeholder="Fetching Current Date ...">
             </div>
         </div>
         <p>This is a simple page with a sidebar navigation menu.</p>
@@ -33,21 +32,53 @@ require_once(__ROOT__.'/scripts/ssh_helper.php');
     <script>
         flatpickr('#date-picker', {
             onChange: async function(selectedDates, dateStr, instance) {
-                console.log(dateStr);
                 document.getElementById("date-picker").disabled = true;
+                updateServerDate(dateStr);
             }
         });
 
-        <?php 
-            $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-            $output = $ssh->executeCommand('powershell Get-Date -Format "dd/MM/yyyy"');
-        ?>
+        function updateServerDate(date) {
+            let dateParts = date.split("-");
+            let newDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
 
-        document.getElementById("server-date").value = <?php echo $output?>
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>DateController.php',
+                method: 'POST',
+                data: { date: newDate},
+                dataType: 'json',
+                success: function(response) {
+                    fetchCurrentDate();
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                }
+            });
+        }
+
+        function fetchCurrentDate() {
+            document.getElementById("server-date").value = "Fetching Current Date ...";
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>DateController.php',
+                method: 'GET',
+                // data: { name: 'John Doe', email: 'john.doe@example.com' }, // Data sent in POST request
+                dataType: 'json',
+                success: function(response) {
+                    let dateString = response.data;
+
+                    // Remove extra characters like \r\n
+                    dateString = dateString.trim();
+                    const [day, month, year] = dateString.split("/");
+
+                    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+                    document.getElementById("server-date").value = formattedDate;
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                }
+            });
+        }
+
+        fetchCurrentDate();
     </script>
-    <?php 
-        $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-        $output = $ssh->executeCommand('dir');
-    ?>
 </body>
 </html>
