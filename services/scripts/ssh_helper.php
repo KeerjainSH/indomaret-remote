@@ -32,6 +32,11 @@ class SSHConnection
         return $this->connection->exec($command);
     }
 
+    public function executeCommandWithOutput($command, $output)
+    {
+        return $this->connection->exec($command, $output);
+    }
+
     // Prevent cloning
     private function __clone() {}
 

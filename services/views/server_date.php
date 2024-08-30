@@ -29,22 +29,81 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         <div class="date check-app">
             <div>
                 <h2>Check Application Status</h2>
-                <label for="date-picker">Enter App Name:</label>
+                <label for="app-check">Enter App Name:</label>
                 <input type="text" id="app-name" placeholder="Enter App Name to check">
             </div>
             <div class="button-container">
-                <button class="custom-button">Check</button>
+                <button id="check-app" class="custom-button">Check</button>
             </div>
             <div class="button-container">
-                <button class="custom-button-open">Open App</button>
+                <button id="open-app" class="custom-button-open">Open App</button>
             </div>
-            <div class="status-container"><span>App Not Open</span></div>
+            <div class="status-container"><span id="app-status"></span></div>
         </div>
         <!-- <p>This is a simple page with a sidebar navigation menu.</p> -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        $(document).ready(function() {
+            $("#open-app").click(function(){
+                const appName = $('#app-name').val();
+                if (appName === "") {
+                    alert("Enter App name!")
+                    return;
+                }
+
+                $.ajax({
+                    url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>AppController.php',
+                    method: 'POST',
+                    data: { appName: appName},
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response);
+                        // const data = response.data
+                        // if (data === null) {
+                        //     document.getElementById("app-status").textContent = "App Not Open";
+                        //     return;
+                        // }
+                        // document.getElementById("app-status").textContent = "App is Open";
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("An error occurred: " + status + " - " + error);
+                    },
+                    complete: function(xhr, status) {
+                    }
+                });
+            }); 
+            $("#check-app").click(function(){
+                document.getElementById("app-status").textContent = "Checking ...";
+                const appName = $('#app-name').val();
+
+                if (appName === "") {
+                    alert("Enter App name!")
+                    return;
+                }
+
+                $.ajax({
+                    url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>AppController.php',
+                    method: 'GET',
+                    data: { appName: appName},
+                    dataType: 'json',
+                    success: function(response) {
+                        const data = response.data
+                        if (data === null) {
+                            document.getElementById("app-status").textContent = "App Not Open";
+                            return;
+                        }
+                        document.getElementById("app-status").textContent = "App is Open";
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("An error occurred: " + status + " - " + error);
+                    },
+                    complete: function(xhr, status) {
+                    }
+                });
+            }); 
+        });
         flatpickr('#date-picker', {
             onChange: async function(selectedDates, dateStr, instance) {
                 document.getElementById("date-picker").disabled = true;
