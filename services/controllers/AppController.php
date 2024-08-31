@@ -6,32 +6,31 @@ function handle_request() {
     $response = array();
 
     switch ($_SERVER['REQUEST_METHOD']) {
-        // case 'GET':
-        //     $response['method'] = 'GET';
-        //     $response['message'] = "Check APP";
-        //     $response['data'] = null;
+        case 'GET':
+            $response['method'] = 'GET';
+            $response['message'] = "Check APP";
+            $response['data'] = null;
 
-        //     function output($str, &$response) {
-        //         if (!isset($response["data"])) {
-        //             $response["data"] = $str;
-        //             flush();
-        //             ob_flush();
-        //         }
-        //     }
+            function output($str, &$response) {
+                if (!isset($response["data"])) {
+                    $response["data"] = $str;
+                    flush();
+                    ob_flush();
+                }
+            }
 
-        //     $appName = $_GET['appName'];
+            $appName = $_GET['appName'];
 
-        //     $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-        //     $ssh->executeCommandWithOutput("powershell -Command \"Get-Process -Name " .$appName." -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id\"",
-        //     function($str) use (&$response) {
-        //         output($str, $response);
-        //     });
+            $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
+            $ssh->executeCommandWithOutput("powershell -Command \"Get-Process -Name " .$appName." -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id\"",
+            function($str) use (&$response) {
+                output($str, $response);
+            });
 
-        //     break;
+            break;
         
         case 'POST':
             function outputPOST($str, &$response) {
-                echo json_encode($str);
                 if (!isset($response["data"])) {
                     $response["data"] = $str;
                     flush();
@@ -46,9 +45,24 @@ function handle_request() {
             // Include the data in the response
             if (!empty($postData)) {
                 $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-                $ssh->executeCommandWithOutput('powershell Start-Process '.$postData['appName'],
-                function($str) use (&$response) {
-                    outputPOST($str, $response);
+
+                // // Check scheduled task
+                // $ssh->executeCommandWithOutput('schtasks /query /fo list /v | findstr /i "TaskName.*'.$postData['appName'].'-sched"',
+                // function($str) use (&$response) {
+                //     outputPOST($str, $response);
+                // });
+
+                // Create Task First
+                $ssh->executeCommandWithOutput('schtasks /create /tn '.$postData['appName'].'-sched'.' /tr '.$postData['appName'].'.exe /sc onstart /f',
+                    function($str) use (&$response) {
+                        outputPOST($str, $response);
+                });
+                $response["data"] = null;
+
+                //Run task 
+                $ssh->executeCommandWithOutput('schtasks /run /tn '.$postData['appName'].'-sched',
+                    function($str) use (&$response) {
+                        outputPOST($str, $response);
                 });
             } else {
                 $response['data'] = "No data sent";

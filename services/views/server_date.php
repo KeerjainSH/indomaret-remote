@@ -47,6 +47,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     <script>
         $(document).ready(function() {
             $("#open-app").click(function(){
+                document.getElementById("app-status").textContent = "Starting the app, please wait ...";
                 const appName = $('#app-name').val();
                 if (appName === "") {
                     alert("Enter App name!")
@@ -59,13 +60,13 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     data: { appName: appName},
                     dataType: 'json',
                     success: function(response) {
-                        console.log(response);
-                        // const data = response.data
-                        // if (data === null) {
-                        //     document.getElementById("app-status").textContent = "App Not Open";
-                        //     return;
-                        // }
-                        // document.getElementById("app-status").textContent = "App is Open";
+                        const regex = /SUCCESS/;
+                        const containsSuccess = regex.test(response.data);
+                        if (containsSuccess) {
+                            document.getElementById("app-status").textContent = "App is Open";
+                            return;
+                        }
+                        document.getElementById("app-status").textContent = "App Not Open";
                     },
                     error: function(xhr, status, error) {
                         console.error("An error occurred: " + status + " - " + error);
