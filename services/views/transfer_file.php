@@ -16,14 +16,53 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         <h2>Transfer File</h2>
         <div class="container">
             <h1>Upload Your File</h1>
-            <form action="/upload" method="post" enctype="multipart/form-data">
-                <label for="fileUpload" class="file-upload-label">
-                    <input type="file" id="fileUpload" name="fileUpload" class="file-upload-input" multiple required>
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                <label for="fileToUpload" class="file-upload-label">
+                    <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
                     Choose file
                 </label>
-                <button type="submit" class="upload-button">Upload</button>
+                <button id="submit-upload" type="submit" class="upload-button">Upload</button>
             </form>
+            <span id="fileName"></span>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#fileToUpload').on('change', function() {
+                const fileName = $(this).val().split('\\').pop();
+                $('#fileName').text('Selected file: ' + fileName);
+            });
+
+            document.getElementById('submit-upload').addEventListener('click', function(e) {
+                e.preventDefault();
+                const fileInput = document.getElementById('fileToUpload');
+                const file = fileInput.files[0];
+
+                if (file) {
+                    $('#fileName').text('Uploading please wait ...');
+
+                    const formData = new FormData();
+                    formData.append('fileToUpload', file);
+
+                    fetch('<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>FileTransferController.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then()
+                    .then(data => {
+                        console.log(data);
+                        // document.getElementById('response').innerText = data;
+                    })
+                    .catch(error => {
+                        // document.getElementById('response').innerText = 'File upload failed.';
+                        console.error(error);
+                    });
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
