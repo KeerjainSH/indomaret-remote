@@ -116,23 +116,23 @@ define('__ROOT__', dirname(dirname(__FILE__)));
             e.preventDefault();
             document.getElementById("date-picker").disabled = true;
             const date = document.getElementById('date-picker').value;
+            console.log(date);
             updateServerDate(date);
 
         });
 
         flatpickr('#date-picker', {
+            enableTime: true,
             onChange: async function(selectedDates, dateStr, instance) {
             }
         });
 
         function updateServerDate(date) {
-            let dateParts = date.split("-");
-            let newDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
             document.getElementById("server-date").value = "Fetching Current Date ...";
             $.ajax({
                 url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>DateController.php',
                 method: 'POST',
-                data: { date: newDate},
+                data: { date: date},
                 dataType: 'json',
                 success: function(response) {
                     fetchCurrentDate();
@@ -151,17 +151,13 @@ define('__ROOT__', dirname(dirname(__FILE__)));
             $.ajax({
                 url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>DateController.php',
                 method: 'GET',
-                // data: { name: 'John Doe', email: 'john.doe@example.com' }, // Data sent in POST request
                 dataType: 'json',
                 success: function(response) {
                     let dateString = response.data;
 
                     // Remove extra characters like \r\n
                     dateString = dateString.trim();
-                    const [day, month, year] = dateString.split("/");
-
-                    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-                    document.getElementById("server-date").value = formattedDate;
+                    document.getElementById("server-date").value = dateString;
                 },
                 error: function(xhr, status, error) {
                     console.error("An error occurred: " + status + " - " + error);

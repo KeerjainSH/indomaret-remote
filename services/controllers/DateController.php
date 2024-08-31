@@ -11,7 +11,7 @@ function handle_request() {
             $response['message'] = "Test";
 
             $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-            $output = $ssh->executeCommand('powershell Get-Date -Format "dd/MM/yyyy"');
+            $output = $ssh->executeCommand('powershell Get-Date -Format \'yyyy-MM-dd HH:mm\'');
 
             $response["data"] = $output;
             break;
@@ -25,7 +25,7 @@ function handle_request() {
             // Include the data in the response
             if (!empty($postData)) {
                 $ssh = SSHConnection::getInstance('4.145.89.179', 22, 'eka_rahadi');
-                $output = $ssh->executeCommand('powershell Set-Date -Date '.$postData['date']);
+                $output = $ssh->executeCommand('powershell Set-Date -Date \''.$postData['date'].'\'');
                 $response['data'] = $output;
             } else {
                 $response['data'] = "No data sent";
