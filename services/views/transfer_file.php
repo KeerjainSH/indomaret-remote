@@ -49,7 +49,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                         method: 'POST',
                         body: formData
                     })
-                    .then()
+                    .then(res => res.json())
                     .then(data => {
                         console.log(data);
                         // document.getElementById('response').innerText = data;
