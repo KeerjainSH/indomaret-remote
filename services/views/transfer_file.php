@@ -50,13 +50,17 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                         body: formData
                     })
                     .then(res => res.json())
-                    .then(data => {
-                        console.log(data);
-                        // document.getElementById('response').innerText = data;
+                    .then(result => {
+                        if (result.status === "success") {
+                            alert(result.data)
+                        } else {
+                            alert(result.data)
+                        }
                     })
                     .catch(error => {
-                        // document.getElementById('response').innerText = 'File upload failed.';
                         console.error(error);
+                    }).finally(() => {
+                        $('#fileName').text('');
                     });
                 } else {
                     alert('Please select a file to upload.');
