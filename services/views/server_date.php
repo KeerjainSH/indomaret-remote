@@ -47,6 +47,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     <script>
         $(document).ready(function() {
             $("#open-app").click(function(){
+                document.getElementById("open-app").disabled = true;
                 document.getElementById("app-status").textContent = "Starting the app, please wait ...";
                 const appName = $('#app-name').val();
                 if (appName === "") {
@@ -72,10 +73,12 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                         console.error("An error occurred: " + status + " - " + error);
                     },
                     complete: function(xhr, status) {
+                        document.getElementById("open-app").disabled = false;
                     }
                 });
             }); 
             $("#check-app").click(function(){
+                document.getElementById("check-app").disabled = true;
                 document.getElementById("app-status").textContent = "Checking ...";
                 const appName = $('#app-name').val();
 
@@ -101,6 +104,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                         console.error("An error occurred: " + status + " - " + error);
                     },
                     complete: function(xhr, status) {
+                        document.getElementById("check-app").disabled = false;
                     }
                 });
             }); 
