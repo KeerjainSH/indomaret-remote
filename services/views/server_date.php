@@ -21,6 +21,9 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 <label for="date-picker">Select Date:</label>
                 <input type="text" id="date-picker" placeholder="Select Date">
             </div>
+            <div class="button-container">
+                <button id="change-date" class="custom-button">Change</button>
+            </div>
             <div class="server-date-container">
                 <label for="current-server-date">Current Server Date:</label>
                 <input disabled type="text" id="server-date" placeholder="Fetching Current Date ...">
@@ -109,10 +112,16 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 });
             }); 
         });
+        document.getElementById('change-date').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById("date-picker").disabled = true;
+            const date = document.getElementById('date-picker').value;
+            updateServerDate(date);
+
+        });
+
         flatpickr('#date-picker', {
             onChange: async function(selectedDates, dateStr, instance) {
-                document.getElementById("date-picker").disabled = true;
-                updateServerDate(dateStr);
             }
         });
 
