@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b7a718f1b7b53a21b92507cfa57827a",
+    "content-hash": "95e11ced5c3495d164046dc4f8f4050d",
     "packages": [
         {
             "name": "paragonie/constant_time_encoding",
@@ -232,6 +232,56 @@
                 }
             ],
             "time": "2024-08-12T00:13:54+00:00"
+        },
+        {
+            "name": "sergeytsalkov/meekrodb",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SergeyTsalkov/meekrodb.git",
+                "reference": "ca16ea31adde700a4e0954ae0abddb497de4a854"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SergeyTsalkov/meekrodb/zipball/ca16ea31adde700a4e0954ae0abddb497de4a854",
+                "reference": "ca16ea31adde700a4e0954ae0abddb497de4a854",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "db.class.php",
+                    "orm.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Tsalkov",
+                    "email": "stsalkov@gmail.com"
+                }
+            ],
+            "description": "The Simple PHP/MySQL Library",
+            "homepage": "http://www.meekro.com",
+            "keywords": [
+                "database",
+                "mysql",
+                "mysqli",
+                "pdo"
+            ],
+            "support": {
+                "email": "support@meekro.com",
+                "issues": "https://github.com/SergeyTsalkov/meekrodb/issues",
+                "source": "https://github.com/SergeyTsalkov/meekrodb/tree/v3.1.0"
+            },
+            "time": "2024-08-11T01:40:30+00:00"
         }
     ],
     "packages-dev": [],
