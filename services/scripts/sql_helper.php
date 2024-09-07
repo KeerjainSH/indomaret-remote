@@ -6,7 +6,7 @@ class SQL {
     public function __construct() {
         DB::$user = 'root';
         DB::$password = '';
-        DB::$dbName = 'crud_db';
+        DB::$dbName = 'indomaret_db';
         DB::$host = '127.0.0.1';
         DB::$encoding = 'utf8';
     }
