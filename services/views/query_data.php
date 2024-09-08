@@ -40,17 +40,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     <th>Email</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <td>john.doe@example.com</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jane Smith</td>
-                    <td>jane.smith@example.com</td>
-                </tr>
+            <tbody id="table-body">
             </tbody>
         </table>
     </div>
@@ -62,6 +52,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         // Get the <span> element that closes the modal
         const closeBtn = document.getElementsByClassName("close")[0];
         const modalActionBtn = document.getElementById("modalActionBtn");
+        executeBtn.disabled = true;
 
         executeBtn.onclick = function() {
             modal.style.display = "block";
@@ -82,6 +73,43 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         modalActionBtn.onclick = function() {
             alert("Button inside the modal clicked!");
         }
+
+
+        const tableBody = document.getElementById("table-body");
+        const loading = document.getElementById("loading");
+        function showLoading() {
+            tableBody.innerHTML = `
+            <!-- Loading Spinner -->
+                <tr id="loading">
+                    <td colspan="3">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+        function fetchData() {
+            setTimeout(function() {
+                executeBtn.disabled = false;
+                const data = [
+                    { id: 1, email: 'john.doe@example.com', name: 'John Doe' },
+                    { id: 2, email: 'jane.smith@example.com', name: 'Jane Smith' }
+                ];
+
+                tableBody.innerHTML = data.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.email}</td>
+                        <td>${user.name}</td>
+                    </tr>
+                `).join('');
+            }, 3000);
+        }
+        showLoading();
+        fetchData();
+
+
     </script>
 </body>
 </html>
