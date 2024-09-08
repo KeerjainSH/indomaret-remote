@@ -23,11 +23,15 @@ class SQL {
         return DB::query("SELECT * FROM users");
     }
 
+    public function getUser($id) {
+        return DB::query("SELECT * FROM users WHERE id=%i", $id);
+    }
+
     public function updateUser($id, $name, $email) {
         return DB::update('users', [
             'name' => $name,
             'email' => $email
-        ], "id=%d", $id);
+        ], "id=%i", $id);
     }
 
     public function deleteUser($id) {
