@@ -11,6 +11,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
+    <div id="overlay" class="overlay"></div>
     <?php require_once(__ROOT__.'/views/sidebar.php');?>
     <div class="content">
         <!-- Modal -->
@@ -19,6 +20,9 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 <span class="close">&times;</span>
                 <h2>Are you sure?</h2>
                 <p>This will execute the query : SELECT * FROM users;</p>
+                <div id="loading-line" class="loading-container">
+                    <div class="loading-line"></div>
+                </div>
                 <button id="modalActionBtn">Run!</button>
             </div>
         </div>
@@ -55,6 +59,11 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         executeBtn.disabled = true;
 
         executeBtn.onclick = function() {
+            const id = document.getElementById('input-data').value;
+            if (id === "") {
+                fetchAllData();
+                return
+            }
             modal.style.display = "block";
         }
 
@@ -71,7 +80,37 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         }
 
         modalActionBtn.onclick = function() {
-            alert("Button inside the modal clicked!");
+            const id = document.getElementById('input-data').value;
+            const loadingLine = document.getElementById('loading-line');
+            loadingLine.style.display = 'block';
+
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'block';
+
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
+                method: 'GET',
+                data: { id: id},
+                dataType: 'json',
+                success: function(response) {
+                    tableBody.innerHTML = response.data.map(user => `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                        </tr>
+                    `).join('');
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    executeBtn.disabled = false;
+                    loadingLine.style.display = 'none';
+                    overlay.style.display = 'none';
+                    modal.style.display = 'none';
+                }
+            });
         }
 
 
@@ -89,25 +128,32 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 </tr>
             `;
         }
-        function fetchData() {
-            setTimeout(function() {
-                executeBtn.disabled = false;
-                const data = [
-                    { id: 1, email: 'john.doe@example.com', name: 'John Doe' },
-                    { id: 2, email: 'jane.smith@example.com', name: 'Jane Smith' }
-                ];
-
-                tableBody.innerHTML = data.map(user => `
-                    <tr>
-                        <td>${user.id}</td>
-                        <td>${user.email}</td>
-                        <td>${user.name}</td>
-                    </tr>
-                `).join('');
-            }, 3000);
+        function fetchAllData() {
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
+                method: 'GET',
+                // data: { date: date},
+                dataType: 'json',
+                success: function(response) {
+                    tableBody.innerHTML = response.data.map(user => `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                        </tr>
+                    `).join('');
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    executeBtn.disabled = false;
+                }
+            });
         }
+
         showLoading();
-        fetchData();
+        fetchAllData();
 
 
     </script>
