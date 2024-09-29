@@ -32,16 +32,30 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         <div class="date check-app">
             <div>
                 <h2>Check Application Status</h2>
-                <label for="app-check">Enter App Name:</label>
-                <input type="text" id="app-name" placeholder="Enter App Name to check">
+                <label for="app-check-posnet">App Name:</label>
+                <input disabled type="text" id="app-name-posnet" value="posnet.exe" placeholder="Enter App Name to check">
             </div>
             <div class="button-container">
-                <button id="check-app" class="custom-button">Check</button>
+                <button id="check-app-posnet" class="custom-button">Check</button>
             </div>
             <div class="button-container">
-                <button id="open-app" class="custom-button-open">Open App</button>
+                <button id="open-app-posnet" class="custom-button-open">Open App</button>
             </div>
-            <div class="status-container"><span id="app-status"></span></div>
+            <div class="status-container"><span id="app-status-posnet"></span></div>
+        </div>
+        <div class="date check-app">
+            <div>
+                <h2>Check Application Status</h2>
+                <label for="app-check-posman">App Name:</label>
+                <input disabled type="text" id="app-name-posman" value="posman.exe" placeholder="Enter App Name to check">
+            </div>
+            <div class="button-container">
+                <button id="check-app-posman" class="custom-button">Check</button>
+            </div>
+            <div class="button-container">
+                <button id="open-app-posman" class="custom-button-open">Open App</button>
+            </div>
+            <div class="status-container"><span id="app-status-posman"></span></div>
         </div>
         <!-- <p>This is a simple page with a sidebar navigation menu.</p> -->
     </div>
@@ -49,10 +63,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function() {
-            $("#open-app").click(function(){
-                document.getElementById("open-app").disabled = true;
-                document.getElementById("app-status").textContent = "Starting the app, please wait ...";
-                const appName = $('#app-name').val();
+            $("#open-app-posnet").click(function(){
+                document.getElementById("open-app-posnet").disabled = true;
+                document.getElementById("app-status-posnet").textContent = "Starting the app, please wait ...";
+                const appName = $('#app-name-posnet').val();
                 if (appName === "") {
                     alert("Enter App name!")
                     return;
@@ -67,23 +81,23 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                         const regex = /SUCCESS/;
                         const containsSuccess = regex.test(response.data);
                         if (containsSuccess) {
-                            document.getElementById("app-status").textContent = "App is Open";
+                            document.getElementById("app-status-posnet").textContent = "Posnet is Open";
                             return;
                         }
-                        document.getElementById("app-status").textContent = "App Not Open";
+                        document.getElementById("app-status-posnet").textContent = "Posnet Not Open";
                     },
                     error: function(xhr, status, error) {
                         console.error("An error occurred: " + status + " - " + error);
                     },
                     complete: function(xhr, status) {
-                        document.getElementById("open-app").disabled = false;
+                        document.getElementById("open-app-posnet").disabled = false;
                     }
                 });
             }); 
-            $("#check-app").click(function(){
-                document.getElementById("check-app").disabled = true;
-                document.getElementById("app-status").textContent = "Checking ...";
-                const appName = $('#app-name').val();
+            $("#check-app-posnet").click(function(){
+                document.getElementById("check-app-posnet").disabled = true;
+                document.getElementById("app-status-posnet").textContent = "Checking ...";
+                const appName = $('#app-name-posnet').val();
 
                 if (appName === "") {
                     alert("Enter App name!")
@@ -98,16 +112,80 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     success: function(response) {
                         const data = response.data
                         if (data === null) {
-                            document.getElementById("app-status").textContent = "App Not Open";
+                            document.getElementById("app-status-posnet").textContent = "Posnet Not Open";
                             return;
                         }
-                        document.getElementById("app-status").textContent = "App is Open";
+                        document.getElementById("app-status-posnet").textContent = "Posnet is Open";
                     },
                     error: function(xhr, status, error) {
                         console.error("An error occurred: " + status + " - " + error);
                     },
                     complete: function(xhr, status) {
-                        document.getElementById("check-app").disabled = false;
+                        document.getElementById("check-app-posnet").disabled = false;
+                    }
+                });
+            }); 
+
+            // ======== Posman ========
+            $("#open-app-posman").click(function(){
+                document.getElementById("open-app-posman").disabled = true;
+                document.getElementById("app-status-posman").textContent = "Starting the app, please wait ...";
+                const appName = $('#app-name-posman').val();
+                if (appName === "") {
+                    alert("Enter App name!")
+                    return;
+                }
+
+                $.ajax({
+                    url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>AppController.php',
+                    method: 'POST',
+                    data: { appName: appName},
+                    dataType: 'json',
+                    success: function(response) {
+                        const regex = /SUCCESS/;
+                        const containsSuccess = regex.test(response.data);
+                        if (containsSuccess) {
+                            document.getElementById("app-status-posman").textContent = "Posman is Open";
+                            return;
+                        }
+                        document.getElementById("app-status-posman").textContent = "Posman Not Open";
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("An error occurred: " + status + " - " + error);
+                    },
+                    complete: function(xhr, status) {
+                        document.getElementById("open-app-posman").disabled = false;
+                    }
+                });
+            }); 
+            $("#check-app-posman").click(function(){
+                document.getElementById("check-app-posman").disabled = true;
+                document.getElementById("app-status-posman").textContent = "Checking ...";
+                const appName = $('#app-name-posman').val();
+
+                if (appName === "") {
+                    alert("Enter App name!")
+                    return;
+                }
+
+                $.ajax({
+                    url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>AppController.php',
+                    method: 'GET',
+                    data: { appName: appName},
+                    dataType: 'json',
+                    success: function(response) {
+                        const data = response.data
+                        if (data === null) {
+                            document.getElementById("app-status-posman").textContent = "Posman Not Open";
+                            return;
+                        }
+                        document.getElementById("app-status-posman").textContent = "Posman is Open";
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("An error occurred: " + status + " - " + error);
+                    },
+                    complete: function(xhr, status) {
+                        document.getElementById("check-app-posman").disabled = false;
                     }
                 });
             }); 
