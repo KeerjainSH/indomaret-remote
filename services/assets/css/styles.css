@@ -116,6 +116,11 @@ p {
 }
 
 /* Upload File */
+.box {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+}
 .container {
     background-color: #fff;
     padding: 20px;

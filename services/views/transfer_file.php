@@ -14,16 +14,29 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     <?php require_once(__ROOT__.'/views/sidebar.php');?>
     <div class="content">
         <h2>Transfer File</h2>
-        <div class="container">
-            <h1>Upload Your File</h1>
-            <form id="uploadForm" method="post" enctype="multipart/form-data">
-                <label for="fileToUpload" class="file-upload-label">
-                    <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
-                    Choose file
-                </label>
-                <button id="submit-upload" type="submit" class="upload-button">Upload</button>
-            </form>
-            <span id="fileName"></span>
+        <div class="box">
+            <div class="container">
+                <h1>Upload Your CSV File</h1>
+                <form id="uploadForm" method="post" enctype="multipart/form-data">
+                    <label for="fileToUpload" class="file-upload-label">
+                        <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
+                        Choose file
+                    </label>
+                    <button id="submit-upload" type="submit" class="upload-button">Upload</button>
+                </form>
+                <span id="fileName"></span>
+            </div>
+            <div class="container">
+                <h1>Upload Your SQL File</h1>
+                <form id="uploadForm" method="post" enctype="multipart/form-data">
+                    <label for="fileToUpload" class="file-upload-label">
+                        <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
+                        Choose file
+                    </label>
+                    <button id="submit-upload" type="submit" class="upload-button">Upload</button>
+                </form>
+                <span id="fileName"></span>
+            </div>
         </div>
     </div>
 
