@@ -9,17 +9,35 @@ function handle_request() {
         case 'GET':
             $sql = new SQL();
             $response['method'] = 'GET';
-            if (isset($_GET['id'])) {
-                $user = $sql->getUser($_GET['id']);
-                
-                $response['message'] = "Get Data with ID: " . $_GET['id'];
-                $response['data'] = $user;
-            } else {
-                $users = $sql->getUsers();
-                $response['message'] = "Get All Data";
-                $response['data'] = $users;
-            }
+            
+            $users = $sql->getAllToko();
+            $response['message'] = "Get All Data";
+            $response['data'] = $users;
 
+            break;
+        case 'POST':
+            $sql = new SQL();
+            $response['method'] = 'POST';
+
+            $postData = $_POST;
+            $queryType = $postData['type'];
+
+            if ($queryType == "const") {
+                $res = $sql->updateConst();
+                $response['message'] = "Update const table";
+                $response['data'] = $res;
+            } else {
+                $res = $sql->updateStmast();
+                $response['message'] = "Update stmast table";
+                $response['data'] = $res;
+            }
+            break;
+        case 'DELETE':
+            $response['method'] = 'DELETE';
+            $sql = new SQL();
+            $res = $sql->deleteConst();
+            $response['message'] = "Delete const table";
+            $response['data'] = $res;
             break;
         default:
             // Handle other methods

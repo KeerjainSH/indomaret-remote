@@ -19,22 +19,26 @@ class SQL {
         return DB::insertId();
     }
 
-    public function getUsers() {
-        return DB::query("SELECT * FROM users");
+    public function getAllToko() {
+        return DB::query("SELECT * FROM toko");
     }
 
-    public function getUser($id) {
-        return DB::query("SELECT * FROM users WHERE id=%i", $id);
+    public function updateStmast() {
+        return DB::update('stmast', [
+            'begbal' => 1000,
+            'qty' => 1000
+        ], '1=1');
     }
 
-    public function updateUser($id, $name, $email) {
-        return DB::update('users', [
-            'name' => $name,
-            'email' => $email
-        ], "id=%i", $id);
+    public function updateConst() {
+        $values = ["wsb", "ne", "pco"];
+        return DB::update('const', [
+            'jenis' => "N",
+        ], "rkey in %ls", $values);
     }
 
-    public function deleteUser($id) {
-        return DB::delete('users', "id=%d", $id);
+    public function deleteConst() {
+        $value = "ccd";
+        return DB::delete('const', "rkey=%s", $value);
     }
 }

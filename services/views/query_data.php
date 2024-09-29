@@ -48,9 +48,14 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
+                    <th>RECID1</th>
+                    <th>RECID</th>
+                    <th>KDSTRATA</th>
+                    <th>KDORGAN</th>
+                    <th>KDLOC</th>
+                    <th>KDTK</th>
+                    <th>nama</th>
+                    <th>ALMT</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -109,40 +114,29 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 
         modalActionBtn.onclick = function() {
             const btnType = $('#modal-text-info').attr("data-btn-type");
-            console.log(btnType);
-            return;
 
-            const id = document.getElementById('input-data').value;
             const loadingLine = document.getElementById('loading-line');
             loadingLine.style.display = 'block';
 
             const overlay = document.getElementById('overlay');
             overlay.style.display = 'block';
 
-            $.ajax({
-                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
-                method: 'GET',
-                data: { id: id},
-                dataType: 'json',
-                success: function(response) {
-                    tableBody.innerHTML = response.data.map(user => `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
-                        </tr>
-                    `).join('');
-                },
-                error: function(xhr, status, error) {
-                    console.error("An error occurred: " + status + " - " + error);
-                },
-                complete: function(xhr, status) {
-                    executeBtn.disabled = false;
-                    loadingLine.style.display = 'none';
-                    overlay.style.display = 'none';
-                    modal.style.display = 'none';
-                }
-            });
+            if (btnType === "select-btn") {
+                fetchAllData();
+                return;
+            }
+            if (btnType === "update-const-btn") {
+                updateConstStmt()
+                return;
+            }
+            if (btnType === "delete-const-btn") {
+                deleteConstStmt();
+                return;
+            }
+            if (btnType === "update-stmast-btn") {
+                updateStmastStmt()
+                return;
+            }
         }
 
 
@@ -152,13 +146,74 @@ define('__ROOT__', dirname(dirname(__FILE__)));
             tableBody.innerHTML = `
             <!-- Loading Spinner -->
                 <tr id="loading">
-                    <td colspan="3">
+                    <td colspan="8">
                         <div class="loading">
                             <div class="spinner"></div>
                         </div>
                     </td>
                 </tr>
             `;
+        }
+        function cleanup() {
+            const loadingLine = document.getElementById('loading-line');
+            const overlay = document.getElementById('overlay');
+
+            loadingLine.style.display = 'none';
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+        }
+
+        function deleteConstStmt() {
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
+                method: 'DELETE',
+                dataType: 'json',
+                success: function(response) {
+                    console.log("const delete", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    cleanup();
+                }
+            });
+        }
+
+        function updateStmastStmt() {
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
+                method: 'POST',
+                data: { type: 'stmast'},
+                dataType: 'json',
+                success: function(response) {
+                    console.log("stmast post", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    cleanup()
+                }
+            });
+        }
+
+        function updateConstStmt() {
+            $.ajax({
+                url: '<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>QueryController.php',
+                method: 'POST',
+                data: { type: 'const'},
+                dataType: 'json',
+                success: function(response) {
+                    console.log("const post", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("An error occurred: " + status + " - " + error);
+                },
+                complete: function(xhr, status) {
+                    cleanup();
+                }
+            });
         }
         function fetchAllData() {
             $.ajax({
@@ -167,11 +222,16 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 // data: { date: date},
                 dataType: 'json',
                 success: function(response) {
-                    tableBody.innerHTML = response.data.map(user => `
+                    tableBody.innerHTML = response.data.map(datum => `
                         <tr>
-                            <td>${user.id}</td>
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
+                            <td>${datum.RECID1}</td>
+                            <td>${datum.RECID}</td>
+                            <td>${datum.KDSTRATA}</td>
+                            <td>${datum.KDORGAN}</td>
+                            <td>${datum.KDLOC}</td>
+                            <td>${datum.KDTK}</td>
+                            <td>${datum.nama}</td>
+                            <td>${datum.ALMT}</td>
                         </tr>
                     `).join('');
                 },
@@ -179,14 +239,12 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     console.error("An error occurred: " + status + " - " + error);
                 },
                 complete: function(xhr, status) {
-                    selectBtn.disabled = false;
+                    cleanup();
                 }
             });
         }
 
-        showLoading();
-        fetchAllData();
-
+        // showLoading();
 
     </script>
 </body>
