@@ -18,45 +18,50 @@ define('__ROOT__', dirname(dirname(__FILE__)));
             <div class="container">
                 <h1>Upload Your CSV File</h1>
                 <form id="uploadForm" method="post" enctype="multipart/form-data">
-                    <label for="fileToUpload" class="file-upload-label">
-                        <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
+                    <label for="fileToUploadCsv" class="file-upload-label">
+                        <input type="file" id="fileToUploadCsv" name="fileToUploadCsv" class="file-upload-input" required>
                         Choose file
                     </label>
-                    <button id="submit-upload" type="submit" class="upload-button">Upload</button>
+                    <button id="submit-upload-csv" type="submit" class="upload-button">Upload</button>
                 </form>
-                <span id="fileName"></span>
+                <span id="fileNameCsv"></span>
             </div>
             <div class="container">
                 <h1>Upload Your SQL File</h1>
                 <form id="uploadForm" method="post" enctype="multipart/form-data">
-                    <label for="fileToUpload" class="file-upload-label">
-                        <input type="file" id="fileToUpload" name="fileToUpload" class="file-upload-input" required>
+                    <label for="fileToUploadSql" class="file-upload-label">
+                        <input type="file" id="fileToUploadSql" name="fileToUploadSql" class="file-upload-input" required>
                         Choose file
                     </label>
-                    <button id="submit-upload" type="submit" class="upload-button">Upload</button>
+                    <button id="submit-upload-sql" type="submit" class="upload-button">Upload</button>
                 </form>
-                <span id="fileName"></span>
+                <span id="fileNameSql"></span>
             </div>
         </div>
     </div>
 
     <script>
         $(document).ready(function() {
-            $('#fileToUpload').on('change', function() {
+            $('#fileToUploadCsv').on('change', function() {
                 const fileName = $(this).val().split('\\').pop();
-                $('#fileName').text('Selected file: ' + fileName);
+                $('#fileNameCsv').text('Selected file: ' + fileName);
+            });
+            $('#fileToUploadSql').on('change', function() {
+                const fileName = $(this).val().split('\\').pop();
+                $('#fileNameSql').text('Selected file: ' + fileName);
             });
 
-            document.getElementById('submit-upload').addEventListener('click', function(e) {
+            document.getElementById('submit-upload-csv').addEventListener('click', function(e) {
                 e.preventDefault();
-                const fileInput = document.getElementById('fileToUpload');
+                const fileInput = document.getElementById('fileToUploadCsv');
                 const file = fileInput.files[0];
 
                 if (file) {
-                    $('#fileName').text('Uploading please wait ...');
+                    $('#fileNameCsv').text('Uploading please wait ...');
 
                     const formData = new FormData();
-                    formData.append('fileToUpload', file);
+                    formData.append('fileToUploadCsv', file);
+                    formData.append('type', 'csv');
 
                     fetch('<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>FileTransferController.php', {
                         method: 'POST',
@@ -73,7 +78,41 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     .catch(error => {
                         console.error(error);
                     }).finally(() => {
-                        $('#fileName').text('');
+                        $('#fileNameCsv').text('');
+                    });
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+
+            document.getElementById('submit-upload-sql').addEventListener('click', function(e) {
+                e.preventDefault();
+                const fileInput = document.getElementById('fileToUploadSql');
+                const file = fileInput.files[0];
+
+                if (file) {
+                    $('#fileNameSql').text('Uploading please wait ...');
+
+                    const formData = new FormData();
+                    formData.append('fileToUploadSql', file);
+                    formData.append('type', 'sql');
+
+                    fetch('<?php echo "http://" .$_SERVER['SERVER_NAME']."/indomaret-remote/services/controllers/";?>FileTransferController.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.status === "success") {
+                            alert(result.data)
+                        } else {
+                            alert(result.data)
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    }).finally(() => {
+                        $('#fileNameSql').text('');
                     });
                 } else {
                     alert('Please select a file to upload.');

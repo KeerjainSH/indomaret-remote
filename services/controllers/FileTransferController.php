@@ -9,19 +9,41 @@ function handle_request() {
             $response['method'] = 'POST';
             $response['message'] = "Upload File";
 
-            $uploadDir = 'uploads/';
-            $uploadFile = $uploadDir . basename($_FILES['fileToUpload']['name']);
-        
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+            $fileType = $_POST['type'];
+
+            if ($fileType == "csv") {
+                $uploadDir = 'uploads_csv/';
+                $uploadFile = $uploadDir . basename($_FILES['fileToUploadCsv']['name']);
+            
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+            
+                if (move_uploaded_file($_FILES['fileToUploadCsv']['tmp_name'], $uploadFile)) {
+                    $response["data"] = "File uploaded successfully.";
+                    $response["status"] = "success";
+                } else {
+                    $response["status"] = "failed";
+                    $response["data"] = "File uploaded failed.";
+                }
+                break;
             }
-        
-            if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadFile)) {
-                $response["data"] = "File uploaded successfully.";
-                $response["status"] = "success";
-            } else {
-                $response["status"] = "failed";
-                $response["data"] = "File uploaded failed.";
+            if ($fileType == "sql") {
+                $uploadDir = 'uploads_sql/';
+                $uploadFile = $uploadDir . basename($_FILES['fileToUploadSql']['name']);
+            
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+            
+                if (move_uploaded_file($_FILES['fileToUploadSql']['tmp_name'], $uploadFile)) {
+                    $response["data"] = "File uploaded successfully.";
+                    $response["status"] = "success";
+                } else {
+                    $response["status"] = "failed";
+                    $response["data"] = "File uploaded failed.";
+                }
+                break;
             }
             break;
         default:
