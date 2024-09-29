@@ -19,7 +19,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Are you sure?</h2>
-                <p>This will execute the query : SELECT * FROM users;</p>
+                <p id="modal-text-info">This will execute the query : SELECT * FROM users;</p>
                 <div id="loading-line" class="loading-container">
                     <div class="loading-line"></div>
                 </div>
@@ -28,12 +28,21 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         </div>
         <h2>Query Database</h2>
         <div class="query-action-section">
-            <div>
+            <!-- <div>
                 <label for="input-data">Input Data:</label>
                 <input type="text" id="input-data" placeholder="Input Data">
+            </div> -->
+            <div class="button-container">
+                <button id="select-btn" class="custom-button">Select Query</button>
             </div>
             <div class="button-container">
-                <button id="execute-btn" class="custom-button">Execute</button>
+                <button id="update-const-btn" class="custom-button">Update `const` Query</button>
+            </div>
+            <div class="button-container">
+                <button id="delete-const-btn" class="custom-button">Delete `const` Query</button>
+            </div>
+            <div class="button-container">
+                <button id="update-stmast-btn" class="custom-button">Update `stmast` Query</button>
             </div>
         </div>
         <table>
@@ -50,20 +59,39 @@ define('__ROOT__', dirname(dirname(__FILE__)));
     </div>
 
     <script>
+        const textInfo = document.getElementById("modal-text-info");
         const modal = document.getElementById("myModal");
-        const executeBtn = document.getElementById("execute-btn");
+        const selectBtn = document.getElementById("select-btn");
+        const updateConstBtn = document.getElementById("update-const-btn");
+        const deleteConstBtn = document.getElementById("delete-const-btn");
+        const updateStmastBtn = document.getElementById("update-stmast-btn");
 
         // Get the <span> element that closes the modal
         const closeBtn = document.getElementsByClassName("close")[0];
         const modalActionBtn = document.getElementById("modalActionBtn");
-        executeBtn.disabled = true;
 
-        executeBtn.onclick = function() {
-            const id = document.getElementById('input-data').value;
-            if (id === "") {
-                fetchAllData();
-                return
-            }
+        selectBtn.onclick = function() {
+            textInfo.textContent = "This will execute the query : SELECT * FROM toko;"
+            // set data button selected
+            $('#modal-text-info').attr('data-btn-type', 'select-btn');
+            modal.style.display = "block";
+        }
+        updateConstBtn.onclick = function() {
+            textInfo.textContent = "This will execute the query : UPDATE const SET jenis = 'N' WHERE rkey in ('wsb', 'ne', 'pco');"
+            // set data button selected
+            $('#modal-text-info').attr('data-btn-type', 'update-const-btn');
+            modal.style.display = "block";
+        }
+        deleteConstBtn.onclick = function() {
+            textInfo.textContent = "This will execute the query : DELETE const WHERE rkey='ccd';"
+            // set data button selected
+            $('#modal-text-info').attr('data-btn-type', 'delete-const-btn');
+            modal.style.display = "block";
+        }
+        updateStmastBtn.onclick = function() {
+            textInfo.textContent = "This will execute the query : UPDATE stmast SET begbal='1000', qty='1000';"
+            // set data button selected
+            $('#modal-text-info').attr('data-btn-type', 'update-stmast-btn');
             modal.style.display = "block";
         }
 
@@ -80,6 +108,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         }
 
         modalActionBtn.onclick = function() {
+            const btnType = $('#modal-text-info').attr("data-btn-type");
+            console.log(btnType);
+            return;
+
             const id = document.getElementById('input-data').value;
             const loadingLine = document.getElementById('loading-line');
             loadingLine.style.display = 'block';
@@ -147,7 +179,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                     console.error("An error occurred: " + status + " - " + error);
                 },
                 complete: function(xhr, status) {
-                    executeBtn.disabled = false;
+                    selectBtn.disabled = false;
                 }
             });
         }
