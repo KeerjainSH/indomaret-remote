@@ -170,8 +170,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 dataType: 'json',
                 success: function(response) {
                     console.log("const delete", response);
+                    alert("success");
                 },
                 error: function(xhr, status, error) {
+                    alert("failed");
                     console.error("An error occurred: " + status + " - " + error);
                 },
                 complete: function(xhr, status) {
@@ -188,8 +190,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 dataType: 'json',
                 success: function(response) {
                     console.log("stmast post", response);
+                    alert("success");
                 },
                 error: function(xhr, status, error) {
+                    alert("failed");
                     console.error("An error occurred: " + status + " - " + error);
                 },
                 complete: function(xhr, status) {
@@ -206,8 +210,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
                 dataType: 'json',
                 success: function(response) {
                     console.log("const post", response);
+                    alert("success");
                 },
                 error: function(xhr, status, error) {
+                    alert("failed");
                     console.error("An error occurred: " + status + " - " + error);
                 },
                 complete: function(xhr, status) {
