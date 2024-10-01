@@ -1,5 +1,6 @@
 <?php
 define('__ROOT__', dirname(dirname(__FILE__)));
+require_once(__ROOT__.'/scripts/ssh_helper.php');
 
 function handle_request() {
     $response = array();
@@ -26,6 +27,20 @@ function handle_request() {
                     $response["status"] = "failed";
                     $response["data"] = "File uploaded failed.";
                 }
+
+                // SFTP
+                try {
+                    $sftpUploader = SSHConnection::getInstance('44.120.23.2', 22, 'username');
+                
+                    // $localFilePath = '/path/to/local/file.txt';
+                    $localFilePath = $_FILES['fileToUploadCsv']['tmp_name'];
+                    $remoteFilePath = 'D:/Data toko-toko/'.basename($_FILES['fileToUploadCsv']['name']);
+                    $sftpUploader->uploadFile($localFilePath, $remoteFilePath);
+                
+                } catch (Exception $e) {
+                    $response["status"] = "failed";
+                    $response["data"] = "File uploaded failed.";                
+                }
                 break;
             }
             if ($fileType == "sql") {
@@ -42,6 +57,20 @@ function handle_request() {
                 } else {
                     $response["status"] = "failed";
                     $response["data"] = "File uploaded failed.";
+                }
+
+                // SFTP
+                try {
+                    $sftpUploader = SSHConnection::getInstance('44.120.23.2', 22, 'username');
+                
+                    // $localFilePath = '/path/to/local/file.txt';
+                    $localFilePath = $_FILES['fileToUploadSql']['tmp_name'];
+                    $remoteFilePath = 'D:/Data toko-toko/'.basename($_FILES['fileToUploadSql']['name']);
+                    $sftpUploader->uploadFile($localFilePath, $remoteFilePath);
+                
+                } catch (Exception $e) {
+                    $response["status"] = "failed";
+                    $response["data"] = "File uploaded failed.";                
                 }
                 break;
             }

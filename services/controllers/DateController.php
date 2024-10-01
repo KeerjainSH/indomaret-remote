@@ -32,18 +32,6 @@ function handle_request() {
             }
             break;
 
-        // case 'PUT':
-        //     parse_str(file_get_contents("php://input"), $putData);
-        //     $response['method'] = 'PUT';
-        //     $response['message'] = "PUT request received";
-        //     $response['data'] = $putData; // Any PUT data sent
-        //     break;
-
-        // case 'DELETE':
-        //     $response['method'] = 'DELETE';
-        //     $response['message'] = "DELETE request received";
-        //     break;
-
         default:
             // Handle other methods
             $response['method'] = $_SERVER['REQUEST_METHOD'];
